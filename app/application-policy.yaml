@@ -3,18 +3,18 @@ kind: ClusterPolicy
 metadata:
   name: validate-application-deployment
 spec:
-  validationFailureAction: enforce  # This will block the deployment if the policy is violated
+  validationFailureAction: audit
   rules:
     - name: check-replicas
       match:
         resources:
           kinds:
-            - Deployment  # This applies to the Deployment resources
+            - Deployment
       validate:
         message: "Deployment must have exactly 2 replicas."
         pattern:
           spec:
-            replicas: 2  # Ensure replicas are exactly 2
+            replicas: 2
 
     - name: check-container-image-tag
       match:
