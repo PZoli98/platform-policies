@@ -1,0 +1,31 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: validate-application-deployment
+spec:
+  validationFailureAction: enforce  # This will block the deployment if the policy is violated
+  rules:
+    - name: check-replicas
+      match:
+        resources:
+          kinds:
+            - Deployment  # This applies to the Deployment resources
+      validate:
+        message: "Deployment must have exactly 2 replicas."
+        pattern:
+          spec:
+            replicas: 2  # Ensure replicas are exactly 2
+
+    - name: check-container-image-tag
+      match:
+        resources:
+          kinds:
+            - Deployment
+      validate:
+        message: "Container image version must be 'x.x.x'."
+        pattern:
+          spec:
+            template:
+              spec:
+                containers:
+                  - image: "?*.*.*"  # Ensure image is of version x.x.x format
