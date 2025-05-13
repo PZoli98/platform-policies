@@ -17,4 +17,4 @@ spec:
               forProvider:
                 env:
                   - name: TF_VAR_db_workload
-                    value: "?^(OLTP|DW|AJD)$"
+                    value: "?^(OLTP|DW|AJD|APEX)$"
