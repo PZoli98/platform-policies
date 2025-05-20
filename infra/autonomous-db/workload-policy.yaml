@@ -13,7 +13,17 @@ spec:
       validate:
         message: "DB workloads can only be of type OLTP, DW, AJD, or APEX"
         foreach:
-          - list: spec.forProvider.env
-            pattern:
-              name: TF_VAR_db_workload
-              value: "?^(OLTP|DW|AJD|APEX)$"
+          - list: "request.object.spec.forProvider.env"
+            deny:
+              conditions:
+                - key: "{{ element.name }}"
+                  operator: Equals
+                  value: "TF_VAR_db_workload"
+                - key: "{{ element.value }}"
+                  operator: NotIn
+                  value:
+                    - "OLTP"
+                    - "DW"
+                    - "AJD"
+                    - "APEX"
+
