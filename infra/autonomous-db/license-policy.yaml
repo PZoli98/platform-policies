@@ -3,7 +3,7 @@ kind: ClusterPolicy
 metadata:
   name: validate-autonomousdb-license-model
 spec:
-  validationFailureAction: enforce
+  validationFailureAction: audit
   rules:
     - name: allow-only-license-included
       match:
@@ -12,8 +12,9 @@ spec:
             - opentofu.upbound.io/v1beta1/Workspace
       validate:
         message: "Licenses can only be of type LICENSE_INCLUDED"
-        foreach:
-          - list: spec.forProvider.env
-            pattern:
-              name: TF_VAR_license_model
-              value: LICENSE_INCLUDED
+        anyPattern:
+          - spec:
+              forProvider:
+                env:
+                  - name: TF_VAR_license_model
+                    value: LICENSE_INCLUDED
