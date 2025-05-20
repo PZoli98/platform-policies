@@ -3,7 +3,7 @@ kind: ClusterPolicy
 metadata:
   name: validate-autonomousdb-workload
 spec:
-  validationFailureAction: audit
+  validationFailureAction: enforce
   rules:
     - name: allow-only-specific-workloads
       match:
