@@ -1,0 +1,44 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: validate-autonomousdb-license-model
+spec:
+  validationFailureAction: Enforce
+  rules:
+
+    - name: allow-only-license-included
+      match:
+        resources:
+          kinds:
+            - AutonomousDatabase
+      validate:
+        message: "Licenses can only be of type LICENSE_INCLUDED"
+        pattern:
+          spec:
+            licenseModel: LICENSE_INCLUDED
+
+    - name: allow-only-specific-workloads
+      match:
+        resources:
+          kinds:
+            - AutonomousDatabase
+      validate:
+        message: "DB workloads can only be of type OLTP, DW, AJD, or APEX"
+        pattern:
+          spec:
+            workload: OLTP|DW|AJD|APEX
+
+    - name: allow-secret-pw-only
+      match:
+        resources:
+          kinds:
+            - AutonomousDatabase
+      validate:
+        message: "Admin password must be a secret reference."
+        pattern:
+          spec:
+            adminPasswordSecretRef:
+              name: ?*
+              key: ?*
+              namespace: ?*
+
